@@ -3,44 +3,50 @@ package internal
 import (
 	"context"
 	"sync"
+
+	"github.com/google/uuid"
 )
 
 type ctxCancelStore struct {
 	mu      *sync.Mutex
-	counter int
-	cancels map[int]context.CancelFunc
+	cancels map[uuid.UUID]context.CancelFunc
 }
 
 func newCtxCancelStore() *ctxCancelStore {
 	return &ctxCancelStore{
 		mu:      new(sync.Mutex),
-		counter: 0,
-		cancels: make(map[int]context.CancelFunc),
+		cancels: make(map[uuid.UUID]context.CancelFunc),
 	}
 }
 
-func (s *ctxCancelStore) Add(cancel context.CancelFunc) int {
+func (s *ctxCancelStore) Add(cancel context.CancelFunc) uuid.UUID {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.counter++
-	s.cancels[s.counter] = cancel
-	return s.counter
+	id := uuid.New()
+	for {
+		if _, ok := s.cancels[id]; !ok {
+			break
+		}
+		id = uuid.New()
+	}
+	s.cancels[id] = cancel
+	return id
 }
 
-func (s *ctxCancelStore) Del(id int) {
+func (s *ctxCancelStore) Del(id uuid.UUID) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	delete(s.cancels, id)
 }
 
-func (s *ctxCancelStore) Get(id int) (context.CancelFunc, bool) {
+func (s *ctxCancelStore) Get(id uuid.UUID) (context.CancelFunc, bool) {
 	cancel, ok := s.cancels[id]
 	return cancel, ok
 }
 
-func (s *ctxCancelStore) GetIDs() []int {
-	keys := make([]int, len(s.cancels))
+func (s *ctxCancelStore) GetIDs() []uuid.UUID {
+	keys := make([]uuid.UUID, len(s.cancels))
 	i := 0
 	for k := range s.cancels {
 		keys[i] = k

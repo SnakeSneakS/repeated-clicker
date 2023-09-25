@@ -13,8 +13,8 @@ type config struct {
 	RepeatedClick struct {
 		FireKey  []string      `env:"HOOK_FIRE_REPEATED_CLICKS_KEY" envDefault:"ctrl,shift,r,f"`
 		StopKey  []string      `env:"HOOK_STOP_REPEATED_CLICKS_KEY" envDefault:"ctrl,shift,r,s"`
-		Duration time.Duration `env:"REPEATED_CLICKS_INTERVAL" envDefault:"1s"`
-		Interval time.Duration `env:"REPEATED_CLICKS_DURATION" envDefault:"1s"`
+		Duration time.Duration `env:"REPEATED_CLICKS_DURATION" envDefault:"1s"`
+		Interval time.Duration `env:"REPEATED_CLICKS_INTERVAL" envDefault:"100ms"`
 	}
 }
 

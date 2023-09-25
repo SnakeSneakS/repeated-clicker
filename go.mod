@@ -12,6 +12,7 @@ require github.com/caarlos0/env/v9 v9.0.0
 require (
 	github.com/gen2brain/shm v0.0.0-20221026125803-c33c9e32b1c8 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/google/uuid v1.3.1
 	github.com/jezek/xgb v1.1.0 // indirect
 	github.com/kbinani/screenshot v0.0.0-20210720154843-7d3a670d8329 // indirect
 	github.com/lufia/plan9stats v0.0.0-20230110061619-bbe2e5e100de // indirect

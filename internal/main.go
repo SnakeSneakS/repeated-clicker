@@ -24,11 +24,12 @@ func Run() {
 	fmt.Printf("--- Please press %-20s to stop repeated-click ---\n", strings.Join(config.RepeatedClick.StopKey, "+"))
 	clickCtxCancelStore := newCtxCancelStore()
 	gohook.Register(gohook.KeyDown, config.RepeatedClick.FireKey, func(e gohook.Event) {
-		fireRepeatedClick(clickCtxCancelStore, config.RepeatedClick.Interval, config.RepeatedClick.Duration)
+		go fireRepeatedClick(clickCtxCancelStore, config.RepeatedClick.Interval, config.RepeatedClick.Duration)
 	})
 	gohook.Register(gohook.KeyDown, config.RepeatedClick.StopKey, func(e gohook.Event) {
 		stopRepeatedClick(clickCtxCancelStore)
 	})
+	defer stopRepeatedClick(clickCtxCancelStore)
 
 	s := gohook.Start()
 	<-gohook.Process(s)
